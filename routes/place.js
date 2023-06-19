@@ -22,6 +22,4 @@ router.get("/dest/:dest", destinationController);
 
 router.post("/", createRoomController);
 
-
-
 export default router;

@@ -1,6 +1,5 @@
 import { User } from "../model/UserModel.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 //Process API
 export const createUserService = ({ email, password, name }) => {
@@ -25,7 +24,7 @@ export const createUserService = ({ email, password, name }) => {
         resolve({
           status: 200,
           message: "Sign Up Success !!!",
-          data: {
+          content: {
             email: newUser.email,
             name: newUser.name,
           },
@@ -45,16 +44,6 @@ export const createUserService = ({ email, password, name }) => {
   }).catch((e) => console.log(e));
 };
 
-const generalAccessToken = (data) => {
-  const access_token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" });
-  return access_token
-};
-
-const generalRefreshToken = (data) => {
-  const refresh_token = jwt.sign(data, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "365d" });
-  return refresh_token
-};
-
 export const loginUserService = ({ email, password }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -64,7 +53,6 @@ export const loginUserService = ({ email, password }) => {
         if (useDb) {
           const checkPassword = bcrypt.compareSync(password, useDb[0].password);
           if (checkPassword) {
-            const access_token = generalAccessToken({ email: useDb[0].email, name: useDb[0].name, _id: useDb[0]._id });
             resolve({
               status: 200,
               message: "Login successfully",
@@ -75,11 +63,11 @@ export const loginUserService = ({ email, password }) => {
                 password: useDb[0].password,
               },
             });
-          } 
-            resolve({
-              status: 402,
-              message: "The user name or password is wrong",
-            })
+          }
+          resolve({
+            status: 402,
+            message: "The user name or password is wrong",
+          })
         } else {
           resolve({
             status: 401,
