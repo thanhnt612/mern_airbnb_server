@@ -3,26 +3,17 @@ import cors from 'cors';
 import user from './routes/user.js'
 import place from './routes/place.js'
 import booking from './routes/booking.js'
-
 import * as dotenv from 'dotenv'
 import mongoose from 'mongoose';
-import imageDownloader from 'image-downloader'
-import path from 'path';
-import { fileURLToPath } from 'url';
 import multer from 'multer';
-import fs from 'fs'
+import { v2 as cloudinary } from 'cloudinary'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000;
 const URL = process.env.MONGO_DB;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use('/uploads', express.static(__dirname + '/uploads'))
-app.use('/', express.static(__dirname))
-
 
 app.use(express.json())
 app.use(cors());
@@ -33,33 +24,31 @@ app.use('/user', user);
 app.use('/place', place);
 app.use('/booking', booking);
 
-
-app.post('/upload-link', async (req, res) => {
-  const { link } = req.body;
-  const newName = 'photo' + Date.now() + '.jpg';
-  await imageDownloader.image({
-    url: link,
-    dest: __dirname + '/uploads/' + newName,
-  })
-  res.json(newName)
+cloudinary.config({
+  cloud_name: process.env.API_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "place",
+  },
 });
 
+const photoMiddleware = multer({ storage: storage })
 
-const photoMiddleware = multer({ dest: 'uploads' })
-
-app.post('/upload-source', photoMiddleware.array('photos', 100), (req, res) => {
+app.post('/upload-source', photoMiddleware.array('picture', 100), async (req, res) => {
   const uploadFiles = []
   for (let i = 0; i < req.files.length; i++) {
-    const { path, originalname } = req.files[i];
-    const editFile = originalname.split('.');
-    const ext = editFile[editFile.length - 1]
-    const newFile = path + '.' + ext;
-    fs.renameSync(path, newFile);
-    uploadFiles.push(newFile.replace('uploads\\', ''))
+    const { path } = req.files[i];
+    uploadFiles.push(path);
   }
-  res.json(uploadFiles)
+  res.status(200).json({
+    message: 'upload success',
+    content: uploadFiles
+  })
 })
-
 
 mongoose
   .connect(URL)

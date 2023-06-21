@@ -1,5 +1,7 @@
-import { bookingRoomService, getBookingGuestService } from "../services/bookingService.js";
-
+import {
+    bookingRoomService,
+    getBookingGuestService
+} from "../services/bookingService.js";
 
 export const bookingRoomController = async (req, res) => {
     const {
