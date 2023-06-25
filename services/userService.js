@@ -32,7 +32,7 @@ export const createUserService = ({ email, password, name }) => {
       } else {
         resolve({
           status: 400,
-          message: "user name is not a email",
+          message: "Email is not a email",
         });
       }
     } catch (error) {
@@ -50,7 +50,12 @@ export const loginUserService = ({ email, password }) => {
       const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email);
       if (isEmail) {
         const useDb = await User.find({ email: email });
-        if (useDb) {
+        if (useDb == "") {
+          resolve({
+            status: 401,
+            message: "Email is not existed",
+          })
+        } else if (useDb) {
           const checkPassword = bcrypt.compareSync(password, useDb[0].password);
           if (checkPassword) {
             resolve({
@@ -66,18 +71,13 @@ export const loginUserService = ({ email, password }) => {
           }
           resolve({
             status: 402,
-            message: "The user name or password is wrong",
+            message: "Email or password is wrong",
           })
-        } else {
-          resolve({
-            status: 401,
-            message: "the user name is not existed",
-          });
         }
       } else {
         resolve({
           status: 402,
-          message: "user name is not a email",
+          message: "Email is not a email",
         });
       }
     } catch (error) {
@@ -127,7 +127,6 @@ export const searchUserService = (name) => {
         message: "The user is not defined",
       });
     } catch (err) {
-      console.log(err);
       reject({
         message: err,
         status: 400,
@@ -163,7 +162,6 @@ export const updateUserService = (id, data) => {
         });
       }
     } catch (error) {
-      console.log(error);
       reject({
         status: 400,
         massage: error,

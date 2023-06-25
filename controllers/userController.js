@@ -38,7 +38,6 @@ export const searchUserController = async (req, res) => {
       return res.json(response);
     }
   } catch (err) {
-    console.log(err);
     return res.json({
       status: "err",
       message: err,
@@ -64,7 +63,7 @@ export const loginUserController = async (req, res) => {
     return res.json(response);
   } else {
     return res.json({
-      status: "err",
+      status: 400,
       message: "The email and password is require",
     });
   }
