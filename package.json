@@ -4,8 +4,9 @@
   "main": "index.js",
   "DeprecationWarning": "",
   "scripts": {
-    "start": "nodemon index.js",
-    "build": "npm i"
+    "build": "npm i",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
