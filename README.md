@@ -2,7 +2,6 @@
 
 ### Introduce
 This project is a backend for a booking place application [TravelDnD]!, written in  [![Javascript]][Javascript-url]  <br/>
-The booking project allows users to create a new account by signing up and logging in, and it allows hosts to create and update room bookings for rent.<br/>
 The API uses [![Node]][Node-url] and [![Express.js]][Express-url] to build API. <br/>
 Storage data using [![Mongodb]][Mongodb-url] database and storage image with [![Cloudinary]][Cloudinary-url]
 
