@@ -3,6 +3,7 @@ import cors from 'cors';
 import user from './routes/user.js'
 import place from './routes/place.js'
 import booking from './routes/booking.js'
+import blog from './routes/blog.js'
 import * as dotenv from 'dotenv'
 import mongoose from 'mongoose';
 import multer from 'multer';
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 app.use('/user', user);
 app.use('/place', place);
 app.use('/booking', booking);
+app.use('/blog', blog);
 
 cloudinary.config({
   cloud_name: process.env.API_NAME,
