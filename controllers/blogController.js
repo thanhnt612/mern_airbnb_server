@@ -35,6 +35,7 @@ export const getAllBlogController = async (req, res) => {
         });
     }
 };
+
 export const detailBlogController = async (req, res) => {
     try {
         const { blogId } = req.params;
@@ -54,6 +55,7 @@ export const detailBlogController = async (req, res) => {
         });
     }
 };
+
 export const authorBlogController = async (req, res) => {
     try {
         const { authorId } = req.params;
@@ -72,6 +74,7 @@ export const authorBlogController = async (req, res) => {
         });
     }
 };
+
 export const updateBlogController = async (req, res) => {
     try {
         const { blogId } = req.params;
@@ -103,7 +106,8 @@ export const updateBlogController = async (req, res) => {
         });
     }
 };
-export const uploadImage = async (req, res) => {
+
+export const uploadImageBlog = async (req, res) => {
     const uploadImages = []
     for (let i = 0; i < req.files.length; i++) {
         const { path } = req.files[i]

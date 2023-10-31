@@ -134,3 +134,14 @@ export const destinationController = async (req, res) => {
         });
     }
 };
+export const uploadImagePlace = async (req, res) => {
+    const uploadImages = []
+    for (let i = 0; i < req.files.length; i++) {
+        const { path } = req.files[i]
+        uploadImages.push(path);
+    }
+    res.status(200).json({
+        message: 'upload success',
+        content: uploadImages
+    })
+}

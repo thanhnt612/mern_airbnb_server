@@ -1,7 +1,6 @@
 import {
   createUserService,
   loginUserService,
-  getDetailUserService,
   searchUserService,
   updateUserService,
   deleteUserService,
@@ -12,21 +11,16 @@ export const userController = (req, res) => {
   res.send("user page");
 };
 
-export const detailUserController = async (req, res) => {
+export const profileUserController = (req, res) => {
   try {
-    const { userId } = req.params;
-    if (userId) {
-      const response = await getDetailUserService(userId);
+    const response = req.body;
+    if (response) {
       return res.json(response);
     }
-    return res.json({
-      status: "err",
-      message: "The id is require",
-    });
   } catch (err) {
     return res.json({
-      status: "err",
-      message: err,
+      status: "401",
+      message: "You are not Authorized",
     });
   }
 };
@@ -60,7 +54,7 @@ export const loginUserController = async (req, res) => {
   const { email, password } = req.body;
   if (email && password) {
     const response = await loginUserService({ email, password });
-    return res.json(response);
+    res.cookie('token', response.content.access_token).json(response)
   } else {
     return res.json({
       status: 400,
@@ -128,3 +122,15 @@ export const getUserController = async (req, res) => {
     });
   }
 };
+export const uploadImageAvatar = async (req, res) => {
+  const uploadImage = []
+  for (let i = 0; i < req.files.length; i++) {
+    const { path } = req.files[i]
+    uploadImage.push(path);
+  }
+  console.log(uploadImage);
+  // res.status(200).json({
+  //   message: 'upload success',
+  //   content: uploadImages
+  // })
+}

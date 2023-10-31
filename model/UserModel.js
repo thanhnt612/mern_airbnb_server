@@ -16,6 +16,7 @@ const userSchema = new Schema(
       require: true,
       unique: true,
     },
+    avatar: String,
     access_token: {
       type: String,
       unique: true,

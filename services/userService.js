@@ -1,6 +1,16 @@
 import { User } from "../model/UserModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
+const generalAccessToken = (data) => {
+  const access_token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5d" });
+  return access_token
+};
+
+const generalRefreshToken = (data) => {
+  const refresh_token = jwt.sign(data, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "365d" });
+  return refresh_token
+};
 //Process API
 export const createUserService = ({ email, password, name }) => {
   return new Promise(async (resolve, reject) => {
@@ -58,14 +68,17 @@ export const loginUserService = ({ email, password }) => {
         } else if (useDb) {
           const checkPassword = bcrypt.compareSync(password, useDb[0].password);
           if (checkPassword) {
+            const access_token = generalAccessToken({
+              isAdmin: useDb[0].isAdmin,
+              _id: useDb[0]._id,
+              email: useDb[0].email,
+              name: useDb[0].name,
+            });
             resolve({
               status: 200,
               message: "Login successfully",
               content: {
-                email: useDb[0].email,
-                name: useDb[0].name,
-                _id: useDb[0]._id,
-                password: useDb[0].password,
+                access_token
               },
             });
           }
@@ -89,19 +102,22 @@ export const loginUserService = ({ email, password }) => {
   }).catch((e) => console.log(e));
 };
 
-export const getDetailUserService = (userId) => {
+export const profileUserService = (token) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const findUser = await User.findById(userId);
-      if (findUser) {
-        resolve({
-          status: 200,
-          data: findUser,
-        });
-      }
-      resolve({
-        status: 204,
-        message: "FindUser is not defined",
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, {}, async (err, userData) => {
+        if (err) throw err;
+        const { _id, email, name } = await User.findById(userData._id);
+        if (_id, email, name) {
+          resolve({
+            status: 200,
+            content: {
+              _id: _id,
+              email: email,
+              name: name
+            },
+          });
+        }
       });
     } catch (err) {
       reject({
@@ -147,7 +163,6 @@ export const updateUserService = (id, data) => {
       }
       const findUser = await User.findById(id);
       findUser.name = data.name;
-      findUser.password = data.password;
       await findUser.save();
       if (findUser) {
         resolve({
