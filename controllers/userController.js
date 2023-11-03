@@ -5,6 +5,9 @@ import {
   updateUserService,
   deleteUserService,
   getUserService,
+  refreshTokenService,
+  profileAvatarService,
+  createAvatarService,
 } from "../services/userService.js";
 
 export const userController = (req, res) => {
@@ -54,7 +57,16 @@ export const loginUserController = async (req, res) => {
   const { email, password } = req.body;
   if (email && password) {
     const response = await loginUserService({ email, password });
-    res.cookie('token', response.content.access_token).json(response)
+    if (response.content == undefined) {
+      res.json(response)
+    } else {
+      res.cookie('refreshToken', response.content.refresh_token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'None',
+        maxAge: 60 * 24 * 60 * 60 * 1000
+      }).json(response.content.access_token)
+    }
   } else {
     return res.json({
       status: 400,
@@ -62,6 +74,25 @@ export const loginUserController = async (req, res) => {
     });
   }
 };
+export const logoutUserController = (req, res) => {
+  res.cookie('refreshToken', '', {
+    secure: true,
+    httpOnly: true,
+  }).json({ message: "You are now logged out" });
+};
+export const refreshTokenController = async (req, res) => {
+  const { refreshToken } = req.cookies;
+  if (refreshToken) {
+    const response = await refreshTokenService(refreshToken);
+    if (response.content == undefined) {
+      res.json(response)
+    } else {
+      res.json(response.content.access_token)
+    }
+  } else {
+    return res.status(406).json({ message: 'Unauthorized' });
+  }
+}
 export const updateUserController = async (req, res) => {
   try {
     const { id } = req.params;
@@ -122,15 +153,41 @@ export const getUserController = async (req, res) => {
     });
   }
 };
-export const uploadImageAvatar = async (req, res) => {
-  const uploadImage = []
-  for (let i = 0; i < req.files.length; i++) {
-    const { path } = req.files[i]
-    uploadImage.push(path);
+export const createAvatarController = async (req, res) => {
+  const { profile, avatar } = req.body
+  if (profile, avatar) {
+    const response = await createAvatarService({ profile, avatar })
+    return res.json(response)
+  } else {
+    return res.json({
+      status: 400,
+      message: "Data is require"
+    })
   }
-  console.log(uploadImage);
-  // res.status(200).json({
-  //   message: 'upload success',
-  //   content: uploadImages
-  // })
+}
+export const uploadImageAvatar = async (req, res) => {
+  const urlImage = req.file.path
+  res.status(200).json({
+    message: 'upload success',
+    content: urlImage
+  })
+}
+export const profileAvatarController = async (req, res) => {
+  try {
+    const { profileId } = req.params;
+    if (profileId) {
+      const response = await profileAvatarService(profileId);
+      return res.json(response);
+    }
+    return res.json({
+      status: 400,
+      message: "The user is require",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      status: "err",
+      message: err,
+    });
+  }
 }

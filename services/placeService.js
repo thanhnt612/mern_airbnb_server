@@ -26,7 +26,7 @@ export const createRoomService = ({ owner, title, address,
                     message: "Create Room Success !!!",
                     data: {
                         newPlace
-                    },
+                    }
                 });
             } else {
                 resolve({

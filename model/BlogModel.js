@@ -8,7 +8,17 @@ const blogSchema = new Schema({
         require: true,
         unique: true
     },
-    article: {
+    summary: {
+        type: String,
+        require: true,
+        unique: true,
+    },
+    mainArticle: {
+        type: String,
+        require: true,
+        unique: true,
+    },
+    subArticle: {
         type: String,
         require: true,
         unique: true,

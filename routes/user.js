@@ -8,6 +8,10 @@ import {
   getUserController,
   uploadImageAvatar,
   profileUserController,
+  logoutUserController,
+  refreshTokenController,
+  profileAvatarController,
+  createAvatarController,
 } from "../controllers/userController.js";
 
 import multer from 'multer';
@@ -44,10 +48,18 @@ router.delete("/delete/:id", deleteUserController);
 
 router.get("/profile/", authMiddleware, profileUserController);
 
+router.get("/avatar/:profileId", profileAvatarController);
+
 router.post("/register", createUserController);
 
 router.post("/login", loginUserController);
 
+router.post("/logout", logoutUserController)
+
+router.post('/refresh', refreshTokenController)
+
 router.post("/uploadAvatar", photoMiddleware.single('avatar'), uploadImageAvatar)
+
+router.post("/avatar", createAvatarController)
 
 export default router;

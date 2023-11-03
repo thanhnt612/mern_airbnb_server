@@ -7,10 +7,15 @@ import {
 } from "../services/blogService.js"
 
 export const createBlogController = async (req, res) => {
-    const { author, title, article, addPhoto } = req.body
-    if (author && title && article && addPhoto) {
+    const {
+        author, title, summary,
+        mainArticle, subArticle, addPhoto
+    } = req.body
+    if (author && title && summary &&
+        mainArticle && subArticle && addPhoto) {
         const response = await createBlogService({
-            author, title, article, addPhoto
+            author, title, summary, mainArticle,
+            subArticle, addPhoto
         })
         return res.json(response)
     } else {
@@ -48,7 +53,6 @@ export const detailBlogController = async (req, res) => {
             message: "The id is require",
         });
     } catch (err) {
-        console.log(err);
         return res.json({
             status: "err",
             message: err,
@@ -79,11 +83,13 @@ export const updateBlogController = async (req, res) => {
     try {
         const { blogId } = req.params;
         const {
-            author, title, article, addPhoto
+            title, summary, mainArticle,
+            subArticle, addPhoto
         } = req.body
         if (blogId) {
             const response = await updateBlogService(
-                blogId, author, title, article, addPhoto
+                blogId, title, summary, mainArticle,
+                subArticle, addPhoto
             );
             if (response) {
                 return res.json(response);

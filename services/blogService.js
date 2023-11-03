@@ -2,12 +2,14 @@ import { Blog } from "../model/BlogModel.js";
 
 
 //Process API
-export const createBlogService = ({ author, title, article, addPhoto }) => {
+export const createBlogService = ({ author, title, summary, mainArticle,
+    subArticle, addPhoto }) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (author) {
                 const newBlog = await Blog.create({
-                    author, title, article, photos:addPhoto
+                    author, title, summary, mainArticle,
+                    subArticle, photos: addPhoto
                 })
                 resolve({
                     status: 200,
@@ -85,16 +87,18 @@ export const authorBlogService = (authorId) => {
         }
     }).catch((e) => console.log(e));
 }
-export const updateBlogService = (blogId, author, title, article, addPhoto) => {
+export const updateBlogService = (blogId, author, title, summary,
+    mainArticle, subArticle, addPhoto) => {
     return new Promise(async (resolve, reject) => {
         try {
             const blogData = {
-                author, title, article, addPhoto
+                author, title, summary, mainArticle, subArticle, addPhoto
             }
             const findBlog = await Blog.findById(blogId);
-            findBlog.author = blogData.author;
             findBlog.title = blogData.title;
-            findBlog.article = blogData.article;
+            findBlog.summary = blogData.summary;
+            findBlog.mainArticle = blogData.mainArticle;
+            findBlog.subArticle = blogData.subArticle;
             findBlog.photos = blogData.addPhoto;
             await findBlog.save();
             if (findBlog) {
