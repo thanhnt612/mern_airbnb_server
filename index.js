@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(cors(
   {origin: [
     'http://localhost:3000',
-    'https://traveldnd.netlify.app',
+    // 'https://traveldnd.netlify.app',
   ],
   credentials: true}
 ));
