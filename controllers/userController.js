@@ -78,7 +78,12 @@ export const logoutUserController = (req, res) => {
   res.cookie('refreshToken', '', {
     secure: true,
     httpOnly: true,
+    domain: 'traveldndserver.cyclic.app',
   }).json({ message: "You are now logged out" });
+  // req.logOut();
+  // req.session.destroy = ((err) => {
+  //   res.redirect('/'); //Inside a callback… bulletproof!
+  // });
 };
 export const refreshTokenController = async (req, res) => {
   const { refreshToken } = req.cookies;
