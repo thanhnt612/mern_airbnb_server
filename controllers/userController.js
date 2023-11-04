@@ -65,7 +65,10 @@ export const loginUserController = async (req, res) => {
         httpOnly: true,
         sameSite: 'None',
         maxAge: 60 * 24 * 60 * 60 * 1000
-      }).json(response.content.access_token)
+      }).json({
+        status: 200,
+        accessToken: response.content.access_token
+      })
     }
   } else {
     return res.json({
