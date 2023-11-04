@@ -75,9 +75,7 @@ export const loginUserController = async (req, res) => {
   }
 };
 export const logoutUserController = (req, res) => {
-  res.clearCookie("access_token", { httpOnly: true, path: "/", maxAge: -1 })
-  res.clearCookie("refreshToken", { httpOnly: true, path: "/", maxAge: -1 })
-  return res.json({ message: "You are logout" });
+  res.cookie('refreshToken', '', {}).json({ message: "You are logout" })
 };
 export const refreshTokenController = async (req, res) => {
   const { refreshToken } = req.cookies;

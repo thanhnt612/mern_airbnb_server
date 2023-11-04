@@ -50,13 +50,13 @@ router.get("/profile/", authMiddleware, profileUserController);
 
 router.get("/avatar/:profileId", profileAvatarController);
 
-router.get("/logout", logoutUserController)
-
 router.post("/register", createUserController);
 
 router.post("/login", loginUserController);
 
 router.post('/refresh', refreshTokenController)
+
+router.post("/logout", logoutUserController)
 
 router.post("/uploadAvatar", photoMiddleware.single('avatar'), uploadImageAvatar)
 
