@@ -1,6 +1,4 @@
 import { Place } from "../model/PlaceModel.js";
-import jwt from "jsonwebtoken";
-
 
 //Process API
 export const createRoomService = ({ owner, title, address,
@@ -164,8 +162,3 @@ export const destinationService = (destination) => {
         }
     }).catch((e) => console.log(e));
 }
-
-const generalAccessToken = (data) => {
-    const access_token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" });
-    return access_token
-};
