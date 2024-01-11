@@ -37,7 +37,7 @@ router.get("/", getAllRoomController);
 
 router.put("/:roomId", updateRoomController);
 
-router.get("/check", checkStatusRoomController)
+// router.get("/check", checkStatusRoomController)
 
 router.get("/:roomId", detailRoomController);
 
