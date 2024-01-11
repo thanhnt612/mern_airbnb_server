@@ -40,15 +40,15 @@ export const getAllRoomController = async (req, res) => {
     }
 };
 
-// export const checkStatusRoomController = async (req, res) => {
-//     try {
-//         const response = await checkStatusRoomService();
-//         return res.status(200).json(response);
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(500)
-//     }
-// }
+export const checkStatusRoomController = async (req, res) => {
+    try {
+        const response = await checkStatusRoomService();
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500)
+    }
+}
 
 export const detailRoomController = async (req, res) => {
     try {
