@@ -3,7 +3,7 @@ import { Place } from "../model/PlaceModel.js";
 import { Booking } from "../model/BookingModel.js";
 import { Blog } from "../model/BlogModel.js";
 
-export const getUserDashboardService = () => {
+export const getUserDataService = () => {
     return new Promise(async (resolve, reject) => {
         try {
             const getAllUser = await User.find();
@@ -20,7 +20,7 @@ export const getUserDashboardService = () => {
     });
 };
 
-export const getPlaceDashboardService = () => {
+export const getPlaceDataService = () => {
     return new Promise(async (resolve, reject) => {
         try {
             const getAllRoom = await Place.find();
@@ -37,7 +37,7 @@ export const getPlaceDashboardService = () => {
     });
 };
 
-export const getBookingDashboardService = () => {
+export const getBookingDataService = () => {
     return new Promise(async (resolve, reject) => {
         try {
             const getAllBooking = await Booking.find()
@@ -58,7 +58,7 @@ export const getBookingDashboardService = () => {
     })
 }
 
-export const getBlogDashboardService = () => {
+export const getBlogDataService = () => {
     return new Promise(async (resolve, reject) => {
         try {
             const getAllBlog = await Blog.find()

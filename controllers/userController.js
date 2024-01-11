@@ -6,7 +6,6 @@ import {
   getUserService,
   refreshTokenService,
   profileAvatarService,
-  createAvatarService,
   updateAvatarService,
 } from "../services/userService.js";
 
