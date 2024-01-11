@@ -1,4 +1,5 @@
 import { Booking } from "../model/BookingModel.js";
+import { Place } from "../model/PlaceModel.js";
 
 //Process API
 export const bookingRoomService = ({ placeId, guestId, name, phone, checkIn,
@@ -10,6 +11,7 @@ export const bookingRoomService = ({ placeId, guestId, name, phone, checkIn,
                     placeId, guestId, name, phone, checkIn,
                     checkOut, numberOfGuest, price
                 });
+                await Place.findByIdAndUpdate(placeId, { available: false }, { new: true })
                 resolve({
                     status: 200,
                     message: "Create Room Success !!!",
@@ -34,7 +36,11 @@ export const bookingRoomService = ({ placeId, guestId, name, phone, checkIn,
 export const getBookingGuestService = (guestId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const findBooking = await Booking.find({ "guestId": guestId });
+            const findBooking = await Booking.find({ "guestId": guestId })
+                .populate(
+                    'placeId',
+                    'available title address description photos perks -_id'
+                );
             if (findBooking) {
                 resolve({
                     status: 200,

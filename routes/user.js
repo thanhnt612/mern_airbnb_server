@@ -2,7 +2,6 @@ import express from "express";
 import {
   createUserController,
   loginUserController,
-  searchUserController,
   updateUserController,
   deleteUserController,
   getUserController,
@@ -19,6 +18,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import { CloudinaryStorage } from 'multer-storage-cloudinary'
 import * as dotenv from 'dotenv'
 import authMiddleware from "../middleware/authMiddleware.js";
+
 
 dotenv.config()
 
@@ -38,15 +38,13 @@ const photoMiddleware = multer({ storage: storage })
 
 const router = express.Router();
 
-router.get("/search", searchUserController);
-
 router.get("/", getUserController);
 
 router.put("/update/:id", updateUserController);
 
 router.delete("/delete/:id", deleteUserController);
 
-router.get("/profile/", authMiddleware, profileUserController);
+router.get("/profile", authMiddleware, profileUserController);
 
 router.get("/avatar/:profileId", profileAvatarController);
 

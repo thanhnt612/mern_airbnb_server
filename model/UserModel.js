@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
+const DOCUMENT_NAME = 'user'
+const COLLECTION_NAME = 'users'
 const userSchema = new Schema(
   {
     email: {
@@ -29,9 +31,13 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    avatar: {
+      type: String,
+    }
   },
   {
     timestamps: true,
+    collection: COLLECTION_NAME
   }
 );
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model(DOCUMENT_NAME, userSchema);

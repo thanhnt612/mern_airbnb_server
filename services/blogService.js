@@ -30,7 +30,7 @@ export const createBlogService = ({ author, title, summary, mainArticle,
 export const getAllBlogService = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            const getAllBlog = await Blog.find();
+            const getAllBlog = await Blog.find().populate('author', 'name _id');
             resolve({
                 status: 200,
                 content: getAllBlog,

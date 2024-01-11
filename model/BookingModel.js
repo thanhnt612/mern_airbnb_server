@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-
+const DOCUMENT_NAME = 'booking'
+const COLLECTION_NAME = 'bookings'
 const bookingSchema = new Schema({
-    placeId: String,
+    placeId: {
+        type: Schema.Types.ObjectId,
+        ref: 'place'
+    },
     guestId: String,
     checkIn: {
         type: Date,
@@ -22,5 +26,8 @@ const bookingSchema = new Schema({
     },
     numberOfGuest: Number,
     price: Number
+}, {
+    timestamps: true,
+    collection: COLLECTION_NAME
 })
-export const Booking = mongoose.model("Booking", bookingSchema)
+export const Booking = mongoose.model(DOCUMENT_NAME, bookingSchema)

@@ -1,13 +1,13 @@
 import {
   createUserService,
   loginUserService,
-  searchUserService,
   updateUserService,
   deleteUserService,
   getUserService,
   refreshTokenService,
   profileAvatarService,
   createAvatarService,
+  updateAvatarService,
 } from "../services/userService.js";
 
 export const userController = (req, res) => {
@@ -22,25 +22,12 @@ export const profileUserController = (req, res) => {
     }
   } catch (err) {
     return res.json({
-      status: "401",
+      status: 400,
       message: "You are not Authorized",
     });
   }
 };
-export const searchUserController = async (req, res) => {
-  try {
-    const { name } = req.query;
-    if (name) {
-      const response = await searchUserService(name);
-      return res.json(response);
-    }
-  } catch (err) {
-    return res.json({
-      status: "err",
-      message: err,
-    });
-  }
-};
+
 export const createUserController = async (req, res) => {
   const { email, password, name } = req.body;
   if (email && password && name) {
@@ -127,7 +114,7 @@ export const deleteUserController = async (req, res) => {
       const response = await deleteUserService(id);
       return res.status(200).json(response);
     } else {
-      return res.status(200).json({
+      return res.status(400).json({
         status: "err",
         message: "The id is required",
       });
@@ -142,10 +129,7 @@ export const deleteUserController = async (req, res) => {
 export const getUserController = async (req, res) => {
   try {
     const response = await getUserService();
-    return res.status(200).json({
-      status: 200,
-      data: response,
-    });
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({
       status: "error",
@@ -156,7 +140,7 @@ export const getUserController = async (req, res) => {
 export const createAvatarController = async (req, res) => {
   const { profile, avatar } = req.body
   if (profile, avatar) {
-    const response = await createAvatarService({ profile, avatar })
+    const response = await updateAvatarService({ profile, avatar })
     return res.json(response)
   } else {
     return res.json({

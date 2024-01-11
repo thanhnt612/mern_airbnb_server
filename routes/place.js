@@ -1,6 +1,7 @@
 import express from "express";
 import {
     OwnerRoomController,
+    checkStatusRoomController,
     createRoomController,
     destinationController,
     detailRoomController,
@@ -35,6 +36,8 @@ const router = express.Router();
 router.get("/", getAllRoomController);
 
 router.put("/:roomId", updateRoomController);
+
+router.get("/check", checkStatusRoomController)
 
 router.get("/:roomId", detailRoomController);
 

@@ -1,10 +1,9 @@
 import { User } from "../model/UserModel.js";
-import { Avatar } from "../model/AvatarModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const generalAccessToken = (data) => {
-  const access_token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10s" });
+  const access_token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
   return access_token
 };
 
@@ -74,6 +73,7 @@ export const loginUserService = ({ email, password }) => {
               _id: useDb[0]._id,
               email: useDb[0].email,
               name: useDb[0].name,
+              avatar: useDb[0].avatar,
             });
             const refresh_token = generalRefreshToken({
               _id: useDb[0]._id,
@@ -116,9 +116,9 @@ export const refreshTokenService = (refreshToken) => {
           return res.status(406).json({ message: 'Unauthorized' });
         }
         else {
-          const { _id, email, name, isAdmin } = await User.findById(userData._id);
+          const { _id, email, name, isAdmin, avatar } = await User.findById(userData._id);
           const access_token = generalAccessToken({
-            _id, email, name, isAdmin
+            _id, email, name, isAdmin, avatar
           })
           resolve({
             status: 200,
@@ -138,14 +138,17 @@ export const refreshTokenService = (refreshToken) => {
   }).catch((e) => console.log(e));
 };
 
-export const searchUserService = (name) => {
+export const getUserDetailService = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const findName = await User.find({ name });
-      if (findName) {
+      const findUser = await User.findById(id);
+      const { _id, name, email, isAdmin, verify } = findUser
+      if (findUser) {
         resolve({
           status: 200,
-          data: findName,
+          content: {
+            _id, name, email, isAdmin, verify
+          },
         });
       }
       resolve({
@@ -225,7 +228,7 @@ export const getUserService = () => {
       const getAllUser = await User.find();
       resolve({
         status: "OK",
-        data: getAllUser,
+        content: getAllUser,
       });
     } catch (error) {
       reject({
@@ -306,4 +309,28 @@ export const createAvatarService = ({ profile, avatar }) => {
       });
     }
   }).catch((e) => console.log(e));
+}
+
+export const updateAvatarService = ({ profile, avatar }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (profile) {
+        const updated = await User.findByIdAndUpdate(profile, { avatar: avatar }, { new: true })
+        resolve({
+          status: 200,
+          message: "Updated avatar successfully",
+        });
+      } else {
+        resolve({
+          status: 204,
+          message: "The user is not defined",
+        });
+      }
+    } catch (error) {
+      reject({
+        message: error,
+        status: 403,
+      });
+    }
+  })
 }

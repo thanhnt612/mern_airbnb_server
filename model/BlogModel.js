@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-
+const DOCUMENT_NAME = 'blog'
+const COLLECTION_NAME = 'blogs'
 const blogSchema = new Schema({
-    author: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    },
     title: {
         type: String,
         require: true,
@@ -24,9 +28,8 @@ const blogSchema = new Schema({
         unique: true,
     },
     photos: [String],
-},
-    {
-        timestamps: true,
-    }
-);
-export const Blog = mongoose.model("Blog", blogSchema);
+}, {
+    timestamps: true,
+    collection: COLLECTION_NAME
+});
+export const Blog = mongoose.model(DOCUMENT_NAME, blogSchema);

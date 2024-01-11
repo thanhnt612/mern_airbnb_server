@@ -4,20 +4,9 @@ import {
     detailRoomService,
     OwnerRoomService,
     updateRoomService,
-    destinationService
+    destinationService,
+    checkStatusRoomService
 } from "../services/placeService.js"
-// import redis from "ioredis"
-
-// const redisClient = redis.createClient();
-// console.log(redisClient);
-// redisClient.on('connect', () => {
-//     console.log('connected to redis successfully!');
-// })
-
-// redisClient.on('error', (error) => {
-//     console.log('Redis connection error :', error);
-// })
-// const DEFAULT_EXPIRATION = 3600
 
 export const createRoomController = async (req, res) => {
     const {
@@ -45,21 +34,21 @@ export const getAllRoomController = async (req, res) => {
     try {
         const response = await getAllRoomService();
         return res.status(200).json(response);
-        // redisClient.get("place", async (err, place) => {
-        //     if (err) console.log(err);
-        //     if (place) {
-        //         return res.json(JSON.parse(place))
-        //     } else {
-        //         const response = await getAllRoomService();
-        //         redisClient.setex("place", DEFAULT_EXPIRATION, JSON.stringify(response))
-        //     }
-        //     return res.json(response)
-        // })
     } catch (error) {
         console.log(error);
         return res.status(500)
     }
 };
+
+export const checkStatusRoomController = async (req, res) => {
+    try {
+        const response = await checkStatusRoomService();
+        return res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        return res.status(500)
+    }
+}
 export const detailRoomController = async (req, res) => {
     try {
         const { roomId } = req.params;
