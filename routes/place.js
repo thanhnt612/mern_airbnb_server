@@ -1,7 +1,6 @@
 import express from "express";
 import {
     OwnerRoomController,
-    checkStatusRoomController,
     createRoomController,
     destinationController,
     detailRoomController,

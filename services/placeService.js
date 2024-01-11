@@ -59,28 +59,28 @@ export const getAllRoomService = () => {
     });
 };
 
-export const checkStatusRoomService = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            for (let i = 0; i < findBooking.length; i++) {
-                const element = findBooking[i];
-                const currentDate = new Date();
-                const checkoutDate = new Date(element.checkOut)
-                if (currentDate > checkoutDate) {
-                    await Place.findByIdAndUpdate(element.placeId, { available: true }, { new: true })
-                    console.log(`Updated`, i);
-                } else {
-                    console.log(`Nothing`, i);
-                }
-            }
-        } catch (error) {
-            reject({
-                status: 400,
-                message: error,
-            });
-        }
-    })
-}
+// export const checkStatusRoomService = () => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             for (let i = 0; i < findBooking.length; i++) {
+//                 const element = findBooking[i];
+//                 const currentDate = new Date();
+//                 const checkoutDate = new Date(element.checkOut)
+//                 if (currentDate > checkoutDate) {
+//                     await Place.findByIdAndUpdate(element.placeId, { available: true }, { new: true })
+//                     console.log(`Updated`, i);
+//                 } else {
+//                     console.log(`Nothing`, i);
+//                 }
+//             }
+//         } catch (error) {
+//             reject({
+//                 status: 400,
+//                 message: error,
+//             });
+//         }
+//     })
+// }
 export const detailRoomService = (roomId) => {
     return new Promise(async (resolve, reject) => {
         try {
