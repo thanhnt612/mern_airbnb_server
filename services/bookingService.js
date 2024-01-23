@@ -39,7 +39,7 @@ export const getBookingGuestService = (guestId) => {
             const findBooking = await Booking.find({ "guestId": guestId })
                 .populate(
                     'placeId',
-                    'available title address description photos perks -_id'
+                    '_id available title address description photos perks'
                 );
             if (findBooking) {
                 resolve({
@@ -58,4 +58,28 @@ export const getBookingGuestService = (guestId) => {
             })
         }
     }).catch((e) => console.log(e));
+}
+export const deleteBookingService = (id, place) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const deleteBooking = await Booking.findByIdAndDelete(id);
+            await Place.findByIdAndUpdate(place, { available: true }, { new: true })
+            if (deleteBooking) {
+                resolve({
+                    status: 200,
+                    content: 'Booking Deleted'
+                })
+            } else {
+                resolve({
+                    status: 204,
+                    content: "The Booking is not defined",
+                });
+            }
+        } catch (error) {
+            reject({
+                status: 400,
+                massage: error,
+            });
+        }
+    })
 }

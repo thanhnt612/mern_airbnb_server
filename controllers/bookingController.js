@@ -1,5 +1,6 @@
 import {
     bookingRoomService,
+    deleteBookingService,
     getBookingGuestService
 } from "../services/bookingService.js";
 
@@ -38,5 +39,24 @@ export const getBookingGuestController = async (req, res) => {
             status: "error",
             message: error
         })
+    }
+}
+export const deleteBookingController = async (req, res) => {
+    try {
+        const { id } = req.params
+        const data = req.body
+        const place = data.place
+        if (id && place) {
+            const response = await deleteBookingService(id, place);
+            return res.json(response)
+        } else {
+            return res.status(400).json({
+                message: 'The booingId is required'
+            })
+        }
+    } catch (error) {
+        return res.status(404).json({
+            message: error,
+        });
     }
 }

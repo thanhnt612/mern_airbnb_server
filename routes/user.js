@@ -11,6 +11,10 @@ import {
   refreshTokenController,
   profileAvatarController,
   createAvatarController,
+  verifyAccountController,
+  createTokenVerifyController,
+  forgotPasswordController,
+  resetPasswordController,
 } from "../controllers/userController.js";
 
 import multer from 'multer';
@@ -52,6 +56,10 @@ router.post("/register", createUserController);
 
 router.post("/login", loginUserController);
 
+router.get("/confirm/:token", verifyAccountController)
+
+router.post("/verify/:id", createTokenVerifyController)
+
 router.post('/refresh', refreshTokenController)
 
 router.post("/logout", logoutUserController)
@@ -59,5 +67,9 @@ router.post("/logout", logoutUserController)
 router.post("/uploadAvatar", photoMiddleware.single('avatar'), uploadImageAvatar)
 
 router.post("/avatar", createAvatarController)
+
+router.post("/forgot-password", forgotPasswordController)
+
+router.post("/reset-password", resetPasswordController)
 
 export default router;

@@ -31,9 +31,14 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    avatar: {
+    verify: {
+      type: Boolean,
+      default:false
+    },
+    resetLink: {
       type: String,
-    }
+      default: "",
+    },
   },
   {
     timestamps: true,

@@ -62,17 +62,26 @@ export const getAllRoomService = () => {
 export const checkStatusRoomService = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            const job = cron.schedule('1 * * * *', async () => {
+            const job = cron.schedule('10 * * * * *', async () => {
                 const findBooking = await Booking.find()
+                const findPlace = await Place.find()
+
+                //Check Room Available
+                const updatedStatus = findPlace.filter((val) => !findBooking.find(ele => JSON.stringify(ele.placeId).includes(JSON.stringify(val._id)))
+                );
+                updatedStatus.forEach(async (place) => {
+                    await Place.findByIdAndUpdate((place._id), { available: true }, { new: true })
+                })
+
+                //Check out of date
                 for (let i = 0; i < findBooking.length; i++) {
                     const element = findBooking[i];
                     const currentDate = new Date();
                     const checkoutDate = new Date(element.checkOut)
                     if (currentDate > checkoutDate) {
                         await Place.findByIdAndUpdate(element.placeId, { available: true }, { new: true })
-                        console.log(`Updated`, i);
                     } else {
-                        console.log(`Nothing`, i);
+                        await Place.findByIdAndUpdate(element.placeId, { available: false }, { new: true })
                     }
                 }
             }, {

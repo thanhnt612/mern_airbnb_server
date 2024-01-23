@@ -43,7 +43,7 @@ export const getBookingDataService = () => {
             const getAllBooking = await Booking.find()
                 .populate(
                     'placeId',
-                    'title address description photos perks -_id'
+                    'title address description photos perks _id available'
                 );
             resolve({
                 status: 200,

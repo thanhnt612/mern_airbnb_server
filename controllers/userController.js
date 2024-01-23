@@ -7,12 +7,15 @@ import {
   refreshTokenService,
   profileAvatarService,
   updateAvatarService,
+  verifyAccountService,
+  createTokenVerifyService,
+  forgotPasswordService,
+  resetPasswordService,
 } from "../services/userService.js";
 
 export const userController = (req, res) => {
   res.send("user page");
 };
-
 export const profileUserController = (req, res) => {
   try {
     const response = req.body;
@@ -26,7 +29,6 @@ export const profileUserController = (req, res) => {
     });
   }
 };
-
 export const createUserController = async (req, res) => {
   const { email, password, name } = req.body;
   if (email && password && name) {
@@ -114,13 +116,11 @@ export const deleteUserController = async (req, res) => {
       return res.status(200).json(response);
     } else {
       return res.status(400).json({
-        status: "err",
         message: "The id is required",
       });
     }
   } catch (error) {
     return res.status(404).json({
-      status: "err",
       message: error,
     });
   }
@@ -167,7 +167,77 @@ export const profileAvatarController = async (req, res) => {
       message: "The user is require",
     });
   } catch (err) {
-    console.log(err);
+    return res.json({
+      status: "err",
+      message: err,
+    });
+  }
+}
+export const createTokenVerifyController = async (req, res) => {
+  try {
+    const { id } = req.params
+    const data = req.body
+    const email = data.user
+    const response = await createTokenVerifyService(id, email);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500)
+  }
+}
+export const verifyAccountController = async (req, res) => {
+  try {
+    const { token } = req.params
+    if (token) {
+      const response = await verifyAccountService(token)
+      return res.json(response.message)
+    } else {
+      return res.json({
+        status: 400,
+        message: "The token is require",
+      });
+    }
+  } catch (error) {
+    return res.json({
+      status: "err",
+      message: err,
+    });
+  }
+}
+
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email } = req.body
+    if (email) {
+      const response = await forgotPasswordService(email)
+      return res.json(response)
+    } else {
+      return res.json({
+        status: 400,
+        message: "User is require",
+      });
+    }
+  } catch (error) {
+    return res.json({
+      status: "err",
+      message: err,
+    });
+  }
+}
+
+export const resetPasswordController = async (req, res) => {
+  try {
+    const { token, password } = req.body
+    if (token || password) {
+      const response = await resetPasswordService(password, token)
+      return res.json(response)
+    } else {
+      return res.json({
+        status: 400,
+        message: "Missing required",
+      });
+    }
+  } catch (error) {
     return res.json({
       status: "err",
       message: err,

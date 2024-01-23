@@ -1,6 +1,9 @@
 import { User } from "../model/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Token } from "../model/TokenVerify.js";
+import crypto from 'crypto'
+import { resetPasswordFromMail, verifyMail } from "../utils/index.js";
 
 const generalAccessToken = (data) => {
   const access_token = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
@@ -31,9 +34,16 @@ export const createUserService = ({ email, password, name }) => {
           name,
           password: hashPassword,
         });
+        const tokenVerify = await Token.create({
+          user: newUser._id,
+          token: crypto.randomBytes(16).toString('hex')
+        })
+        await tokenVerify.save()
+        const link = `https://traveldndserver.cyclic.app/user/confirm/${tokenVerify.token}`
+        await verifyMail(newUser.email, link)
         resolve({
           status: 200,
-          message: "Sign Up Success !!!",
+          message: "Sign Up Success, Please check your email for verify!!!",
           content: {
             email: newUser.email,
             name: newUser.name,
@@ -74,6 +84,7 @@ export const loginUserService = ({ email, password }) => {
               email: useDb[0].email,
               name: useDb[0].name,
               avatar: useDb[0].avatar,
+              verify: useDb[0].verify
             });
             const refresh_token = generalRefreshToken({
               _id: useDb[0]._id,
@@ -116,9 +127,9 @@ export const refreshTokenService = (refreshToken) => {
           return res.status(406).json({ message: 'Unauthorized' });
         }
         else {
-          const { _id, email, name, isAdmin, avatar } = await User.findById(userData._id);
+          const { _id, email, name, isAdmin, avatar, verify } = await User.findById(userData._id);
           const access_token = generalAccessToken({
-            _id, email, name, isAdmin, avatar
+            _id, email, name, isAdmin, avatar, verify
           })
           resolve({
             status: 200,
@@ -332,5 +343,97 @@ export const updateAvatarService = ({ profile, avatar }) => {
         status: 403,
       });
     }
+  })
+}
+
+export const createTokenVerifyService = (id, email) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const tokenVerify = await Token.create({
+        user: id,
+        token: crypto.randomBytes(16).toString('hex')
+      })
+      await tokenVerify.save()
+      const link = `https://traveldndserver.cyclic.app/user/confirm/${tokenVerify.token}`
+      await verifyMail(email, link)
+      resolve({
+        status: 200,
+        message: "Please check your email for verify!!!",
+      });
+    } catch (error) {
+      reject({
+        message: error,
+        status: 400,
+      });
+    }
+  })
+}
+export const verifyAccountService = (token) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const findToken = await Token.findOne({ "token": token })
+      await User.updateOne({ _id: findToken.user }, { $set: { verify: true } })
+      await Token.findByIdAndDelete(findToken._id)
+      resolve({
+        status: 200,
+        message: "Email Verified !!!"
+      })
+    } catch (error) {
+      reject({
+        message: error,
+        status: 403,
+      });
+    }
+  })
+}
+
+export const forgotPasswordService = (email) => {
+  return new Promise(async (resolve, reject) => {
+    const findUser = await User.findOne({ "email": email });
+    if (findUser) {
+      const resetLink = jwt.sign({ email: findUser.email, id: findUser.id }, process.env.RESET_PASSWORD_TOKEN, { expiresIn: "15m" });
+      findUser.resetLink = resetLink
+      await User.findOneAndUpdate({ "email": email }, findUser)
+      const link = `https://traveldnd.netlify.app/user/reset-password?resetToken=${resetLink}`
+      await resetPasswordFromMail(email, link)
+      resolve({
+        status: 200,
+        message: "Please check email for reset password",
+      })
+    } else {
+      resolve({
+        status: 401,
+        message: "Email is not existed",
+      })
+    }
+  })
+}
+
+export const resetPasswordService = (password, token) => {
+  return new Promise(async (resolve, reject) => {
+    jwt.verify(token, process.env.RESET_PASSWORD_TOKEN, async (err, decoded) => {
+      if (err) {
+        resolve(false);
+        console.log(err);
+      } else {
+        try {
+          const user = await User.findOne({ "email": decoded.email });
+          const hashPassword = bcrypt.hashSync(password, 10);
+          user.password = hashPassword
+          user.resetLink = ""
+          await User.findOneAndUpdate({ "email": decoded.email }, user)
+          resolve({
+            status: 200,
+            message: "Password was reset !!!"
+          })
+        } catch (error) {
+          reject({
+            message: error,
+            status: 403,
+          });
+        }
+      }
+    }
+    );
   })
 }
