@@ -149,8 +149,6 @@ export const createAvatarController = async (req, res) => {
   }
 }
 export const uploadImageAvatar = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
     const urlImage = req.file.path
     res.status(200).json({
