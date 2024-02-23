@@ -22,12 +22,27 @@ const URL = process.env.MONGO_DB;
 //Middleware
 app.use(express.json())
 app.use(cookieParser());
-app.use(cors(
-  {
-    origin: "*",
-    credentials: true
-  }
-));
+const corsOpts = {
+  origin: '*',
+  methods: [
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE'
+  ],
+  allowedHeaders: [
+    'Content-Type',
+  ],
+};
+
+app.use(cors(corsOpts));
+// app.use(cors(
+//   {
+//     origin: ["https://traveldnd.netlify.app", "http://localhost:3000"],
+//     headers: ["Content-Type"],
+//     credentials: true
+//   }
+// ));
 // app.use(morgan("dev"))
 app.use(helmet())
 app.use(compression())
