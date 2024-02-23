@@ -23,7 +23,7 @@ const URL = process.env.MONGO_DB;
 app.use(express.json())
 app.use(cookieParser());
 const corsOpts = {
-  origin: '*',
+  origin: ["https://traveldnd.netlify.app", "http://localhost:3000"],
   methods: [
     'GET',
     'POST',
