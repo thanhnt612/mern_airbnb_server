@@ -29,8 +29,9 @@ app.use(cookieParser());
 //   }
 // ));
 const corsOptions = {
-  origin: "https://traveldnd.netlify.app",
+  origin: ['https://traveldnd.netlify.app', 'http://localhost:3000'],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true
 };
 app.use(cors(corsOptions));
 // app.use(morgan("dev"))
