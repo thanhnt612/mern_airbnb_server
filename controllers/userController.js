@@ -149,11 +149,19 @@ export const createAvatarController = async (req, res) => {
   }
 }
 export const uploadImageAvatar = async (req, res) => {
-  const urlImage = req.file.path
-  res.status(200).json({
-    message: 'upload success',
-    content: urlImage
-  })
+  try {
+    const urlImage = req.file.path
+    console.log(urlImage);
+    res.status(200).json({
+      message: 'upload success',
+      content: urlImage
+    })
+  } catch (error) {
+    return res.json({
+      status: "err",
+      message: err,
+    });
+  }
 }
 export const profileAvatarController = async (req, res) => {
   try {
