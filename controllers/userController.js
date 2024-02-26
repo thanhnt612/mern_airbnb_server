@@ -148,10 +148,10 @@ export const createAvatarController = async (req, res) => {
     })
   }
 }
-export const uploadImageAvatar = async (req, res) => {
+export const uploadImageAvatar = (req, res) => {
   try {
     const urlImage = req.file.path
-    res.status(200).json({
+    return res.status(200).json({
       message: 'upload success',
       content: urlImage
     })
