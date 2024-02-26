@@ -37,12 +37,12 @@ app.use(express.json({ limit: '30mb' }));
 app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 
 //Routes
-// app.use('/', home);
-// app.use('/place', place);
+app.use('/', home);
+app.use('/place', place);
 app.use('/user', user);
-// app.use('/booking', booking);
-// app.use('/blog', blog);
-// app.use('/dashboard', data)
+app.use('/booking', booking);
+app.use('/blog', blog);
+app.use('/dashboard', data)
 
 mongoose
   .connect(URL)
