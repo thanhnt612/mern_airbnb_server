@@ -84,14 +84,14 @@ export const checkStatusRoomService = () => {
                         await Place.findByIdAndUpdate(element.placeId, { available: false }, { new: true })
                     }
                 }
+                resolve({
+                    status: 200,
+                    message: 'Update checker'
+                })
             }, {
                 scheduled: false
             });
             job.start();
-            resolve({
-                status: 200,
-                message: 'Update checker'
-            })
         } catch (error) {
             reject({
                 status: 400,
