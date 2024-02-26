@@ -88,6 +88,10 @@ export const checkStatusRoomService = () => {
                 scheduled: false
             });
             job.start();
+            resolve({
+                status: 200,
+                message: 'Update checker'
+            })
         } catch (error) {
             reject({
                 status: 400,

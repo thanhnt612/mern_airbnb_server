@@ -22,16 +22,17 @@ const URL = process.env.MONGO_DB;
 //Middleware
 app.use(express.json())
 app.use(cookieParser());
+const allowedDomains = ["https://traveldnd.netlify.app", "http://localhost:3000"]
 app.use(
   cors({
-    origin: ['https://traveldnd.netlify.app', 'http://localhost:3000'],
+    origin: allowedDomains,
     credentials: true
   })
-);
+)
 
 // app.use(morgan("dev"))
-// app.use(helmet())
-// app.use(compression())
+app.use(helmet())
+app.use(compression())
 app.use(express.json({ limit: '30mb' }));
 app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 
