@@ -150,11 +150,6 @@ export const createAvatarController = async (req, res) => {
 }
 export const uploadImageAvatar = async (req, res) => {
   try {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); 
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.send('cors problem fixed:)');
     const urlImage = req.file.path
     res.status(200).json({
       message: 'upload success',
@@ -163,7 +158,7 @@ export const uploadImageAvatar = async (req, res) => {
   } catch (error) {
     return res.json({
       status: "err",
-      message: err,
+      message: error,
     });
   }
 }
