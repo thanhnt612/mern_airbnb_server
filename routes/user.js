@@ -64,7 +64,7 @@ router.post('/refresh', refreshTokenController)
 
 router.post("/logout", logoutUserController)
 
-router.post("/uploadAvatar", photoMiddleware.single('avatar'), uploadImageAvatar)
+router.post("/upload-avatar", photoMiddleware.single('avatar'), uploadImageAvatar)
 
 router.post("/avatar", createAvatarController)
 

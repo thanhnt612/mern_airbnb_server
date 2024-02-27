@@ -155,11 +155,8 @@ export const uploadImageAvatar = (req, res) => {
       message: 'upload success',
       content: urlImage
     })
-  } catch (error) {
-    return res.json({
-      status: "err",
-      message: error,
-    });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 }
 export const profileAvatarController = async (req, res) => {
@@ -176,7 +173,7 @@ export const profileAvatarController = async (req, res) => {
   } catch (err) {
     return res.json({
       status: "err",
-      message: err,
+      message: err
     });
   }
 }
